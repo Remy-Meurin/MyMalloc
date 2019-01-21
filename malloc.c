@@ -43,14 +43,20 @@ struct s_header *find_free_block(size_t size)
     while(curr){
         if (curr->free == 1 && curr->size >= size) {
             return curr;
+        } else {
+            curr = curr->next;
         }
-        curr = curr->next;
     }
     return NULL;
 }
 
-// void my_free(void *ptr) {
-//     t_block *block;
-
-//     block = (((t_block *) ptr) - 1);
-// }
+void my_free(void *ptr) {
+    struct s_header *curr = block_list;
+    while(curr) {
+        if (curr == ptr) {
+            curr->free = 1;
+        } else {
+            curr = curr->next;
+        }
+    }
+}
