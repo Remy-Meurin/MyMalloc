@@ -10,6 +10,7 @@
 #include "malloc.h"
 
 struct s_header *block_list;
+struct s_header *head;
 
 void*   malloc(size_t size)
 {
@@ -31,8 +32,8 @@ void*   malloc(size_t size)
         header->size = size;
         header->free = 0;
         header->next = NULL;
-        if (!block_list)
-            block_list = header;
+        if (!head)
+            head = header;
         return (((char *)header) + sizeof(*block));
     }
 }
@@ -51,12 +52,10 @@ struct s_header *find_free_block(size_t size)
 }
 
 void my_free(void *ptr) {
-    struct s_header *curr = block_list;
-    while(curr) {
-        if (curr == ptr) {
-            curr->free = 1;
-        } else {
-            curr = curr->next;
-        }
-    }
+    struct s_header *curr;
+
+    if (!ptr)
+        return;
+    curr = (struct s_header*)ptr - 1;
+    curr->free = 1;
 }
