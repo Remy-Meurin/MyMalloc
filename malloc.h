@@ -13,15 +13,18 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stddef.h>
+#include <stdio.h>
 
-typedef struct s_block
+typedef struct s_header
 {
-    struct s_block *next;
+    struct s_header *next;
+    struct s_header *prev;
     size_t size;
     int free;
-} t_block;
+} t_header;
 
 void *malloc(size_t size);
+struct s_header *findFreeBlock(size_t size);
 // void my_free(void *ptr);
 
 #endif
