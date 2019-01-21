@@ -11,20 +11,27 @@ CC = gcc # C compiler
 CFLAGS = -fPIC -g -W -Werror -Wall# C flags
 LDFLAGS = -shared  # linking flags
 RM = rm -f  # rm command
-TARGET_LIB = libmy_malloc_$(shell uname).so # target lib
+NAME = libmy_malloc_$(shell uname).so # target lib
 
 SRCS = malloc.c # source files
 OBJS = $(SRCS:.c=.o)
 
-.PHONY: all
-all: ${TARGET_LIB}
+all: ${NAME}
 
-$(TARGET_LIB): $(OBJS)
+$(NAME): $(OBJS)
 	$(CC) ${LDFLAGS} -o $@ $^
+	ln -s $(NAME) libmy_malloc.so
 
 $(SRCS:.c=.d):%.d:%.c
 	$(CC) $(CFLAGS) -MM $< >$@
 
-.PHONY: clean
 clean: 
-	-${RM} ${TARGET_LIB} ${OBJS} $(SRCS:.c=.d)
+	-${RM} ${OBJS} $(SRCS:.c=.d)
+	unlink libmy_malloc.so
+
+fclean: clean
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clean fclean re

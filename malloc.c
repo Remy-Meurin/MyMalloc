@@ -51,11 +51,17 @@ struct s_header *find_free_block(size_t size)
     return NULL;
 }
 
-void my_free(void *ptr) {
-    struct s_header *curr;
-
+void free(void *ptr) {
+    struct s_header *header;
+    // printf("Debugg free 1\n");
+    // printf("Address parametre: %p\n", (void *)ptr);
     if (!ptr)
         return;
-    curr = (struct s_header*)ptr - 1;
-    curr->free = 1;
+    // printf("Debugg free 2\n");
+    header = (struct s_header*)ptr - offsetof(struct s_header, next);
+    // printf("Debugg free 3\n");
+    // printf("Address header: %p\n", (void *)header);
+    // printf("1/ Value free => %d\n", header->free);
+    header->free = 1;
+    // printf("2/ Value free => %d\n", header->free);
 }
