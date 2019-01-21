@@ -14,6 +14,7 @@
 #include <unistd.h>
 #include <stddef.h>
 #include <stdio.h>
+#include <string.h> /* memset */
 
 typedef struct s_header
 {
@@ -26,5 +27,6 @@ typedef struct s_header
 void *malloc(size_t size);
 struct s_header *find_free_block(size_t size);
 void free(void *ptr);
-
+void* calloc(size_t num_elements, size_t size);
+// void* realloc(void *ptr, size_t size);
 #endif

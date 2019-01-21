@@ -19,7 +19,7 @@ void*   malloc(size_t size)
     struct s_header *header;
 
     if (!size)
-        return NULL;
+        return (NULL);
 
     header = find_free_block(size);
     if (header){
@@ -43,12 +43,12 @@ struct s_header *find_free_block(size_t size)
     struct s_header *curr = block_list;
     while(curr){
         if (curr->free == 1 && curr->size >= size) {
-            return curr;
+            return (curr);
         } else {
             curr = curr->next;
         }
     }
-    return NULL;
+    return (NULL);
 }
 
 void free(void *ptr) {
@@ -65,3 +65,35 @@ void free(void *ptr) {
     header->free = 1;
     // printf("2/ Value free => %d\n", header->free);
 }
+
+void *calloc(size_t num_elements, size_t size)
+{
+	char *block;
+    unsigned int i;
+
+    block = malloc(num_elements * size);
+    if ((block = malloc(num_elements * size))) {
+        i = 0;
+        while( i < (num_elements * size)) {
+            block[i] = 0;
+            i++;
+        }
+    }
+    return (block);
+}
+
+// void* realloc(void *ptr, size_t size)
+// {
+//     void *block;
+//     if (size == 0) {
+//         free(ptr);
+//         return NULL;
+//     } else if (!ptr) {
+//         block = malloc(size);
+//         if (block) {
+//             memcpy(block, (void *)ptr, size);
+//         }
+//         free(ptr);
+//     }
+//     return block;
+// }
