@@ -24,7 +24,7 @@ typedef struct s_header
 } t_header;
 
 void *malloc(size_t size);
-struct s_header *findFreeBlock(size_t size);
+struct s_header *find_free_block(size_t size);
 // void my_free(void *ptr);
 
 #endif

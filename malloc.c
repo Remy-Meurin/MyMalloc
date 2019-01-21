@@ -9,8 +9,7 @@
 */
 #include "malloc.h"
 
-struct s_header *head;
-struct s_header *tail;
+struct s_header *block_list;
 
 void*   malloc(size_t size)
 {
@@ -21,29 +20,26 @@ void*   malloc(size_t size)
     if (!size)
         return NULL;
 
-    header = findFreeBlock(size);
+    header = find_free_block(size);
     if (header){
         header->free = 0;
         return ((void*)(header + 1));
     } else {
         total_size = sizeof(struct s_header) + size;
-        block = sbrk(total_size);
-        header = block;
+        block = sbrk(total_size * 32);
+        header = (t_header *)block;
         header->size = size;
         header->free = 0;
         header->next = NULL;
-        if (!head)
-            head = header;
-        if (tail)
-            tail->next = header;
-        tail = header;
+        if (!block_list)
+            block_list = header;
         return (((char *)header) + sizeof(*block));
     }
 }
 
-struct s_header *findFreeBlock(size_t size)
+struct s_header *find_free_block(size_t size)
 {
-    struct s_header *curr = head;
+    struct s_header *curr = block_list;
     while(curr){
         if (curr->free == 1 && curr->size >= size) {
             return curr;
