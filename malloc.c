@@ -69,16 +69,17 @@ void free(void *ptr) {
 void *calloc(size_t num_elements, size_t size)
 {
 	char *block;
-    unsigned int i;
 
-    block = malloc(num_elements * size);
-    if ((block = malloc(num_elements * size))) {
-        i = 0;
-        while( i < (num_elements * size)) {
-            block[i] = 0;
-            i++;
-        }
+    if (num_elements == 0 || size == 0) {
+        return NULL;
     }
+
+    if ((block = malloc(num_elements * size))) {
+        memset(block, 0, size * num_elements);
+    } else {
+        return NULL;
+    }
+
     return (block);
 }
 
