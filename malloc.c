@@ -17,7 +17,7 @@ void*   malloc(size_t size)
     size_t total_size;
     void* block;
     struct s_header *header;
-
+    
     if (!size)
         return (NULL);
 
@@ -40,7 +40,7 @@ void*   malloc(size_t size)
 
 struct s_header *find_free_block(size_t size)
 {
-    struct s_header *curr = head;
+    struct s_header *curr = block_list;
     while(curr){
         if (curr->free == 1 && curr->size >= size) {
             return (curr);
