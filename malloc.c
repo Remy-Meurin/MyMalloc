@@ -26,21 +26,21 @@ void*   malloc(size_t size)
         header->free = 0;
         return ((void*)(header + 1));
     } else {
-        total_size = sizeof(struct s_header) + size;
-        block = sbrk(total_size * 32);
+        size = size * 32;
+        total_size = sizeof(struct s_header) + (size);
+        block = sbrk(total_size);
         header = (t_header *)block;
         header->size = size;
         header->free = 0;
-        header->next = NULL;
-        if (!head)
-            head = header;
+        header->next = head;
+        head = header;
         return (((char *)header) + sizeof(*block));
     }
 }
 
 struct s_header *find_free_block(size_t size)
 {
-    struct s_header *curr = block_list;
+    struct s_header *curr = head;
     while(curr){
         if (curr->free == 1 && curr->size >= size) {
             return (curr);
@@ -53,17 +53,10 @@ struct s_header *find_free_block(size_t size)
 
 void free(void *ptr) {
     struct s_header *header;
-    // printf("Debugg free 1\n");
-    // printf("Address parametre: %p\n", (void *)ptr);
     if (!ptr)
         return;
-    // printf("Debugg free 2\n");
     header = (struct s_header*)ptr - offsetof(struct s_header, next);
-    // printf("Debugg free 3\n");
-    // printf("Address header: %p\n", (void *)header);
-    // printf("1/ Value free => %d\n", header->free);
     header->free = 1;
-    // printf("2/ Value free => %d\n", header->free);
 }
 
 void *calloc(size_t num_elements, size_t size)
@@ -76,8 +69,6 @@ void *calloc(size_t num_elements, size_t size)
 
     if ((block = malloc(num_elements * size))) {
         memset(block, 0, size * num_elements);
-    } else {
-        return NULL;
     }
 
     return (block);
