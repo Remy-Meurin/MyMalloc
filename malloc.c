@@ -14,7 +14,6 @@ struct s_header *head;
 
 void*   malloc(size_t size)
 {
-    // printf("Malloc : Start\n");
     size_t total_size;
     void* block;
     struct s_header *header;
@@ -25,7 +24,6 @@ void*   malloc(size_t size)
     header = find_free_block(size);
     if (header){
         header->free = 0;
-        // printf("Malloc : End 1\n");
         return ((void*)(header + 1));
     } else {
         size = size * 32;
@@ -36,7 +34,6 @@ void*   malloc(size_t size)
         header->free = 0;
         header->next = head;
         head = header;
-        // printf("Malloc : End 2\n");
         return (((char *)header) + sizeof(*block));
     }
 }
@@ -56,45 +53,8 @@ struct s_header *find_free_block(size_t size)
 
 void free(void *ptr) {
     struct s_header *header;
-    // printf("FREE : Start\n");
     if (!ptr)
         return;
     header = (struct s_header*)ptr - offsetof(struct s_header, next);
     header->free = 1;
-    // printf("FREE : End\n");
 }
-
-void *calloc(size_t num_elements, size_t size)
-{
-	char *block;
-    
-    if (num_elements == 0 || size == 0) {
-        return NULL;
-    }
-
-    if ((block = malloc(num_elements * size))) {
-        memset(block, 0, size * num_elements);
-    }
-
-    return (block);
-}
-
-// void* realloc(void *ptr, size_t size)
-// {
-//     void *block;
-//     struct s_header *header;
-//     if (!ptr || !size) {
-//         return malloc(size);
-//     }
-//     header = (struct s_header*)ptr - sizeof(struct s_header);
-//     if (header->size >= size) {
-//         return (ptr);
-//     } else {
-//         if ((block = malloc(size))) {
-//             memcpy(block, ptr, header->size);
-//             free(ptr);
-//         }
-//     }
-
-//     return (block);
-// }
